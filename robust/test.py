@@ -238,9 +238,11 @@ def test():
 
     with torch.no_grad():
         for step, (image, gt_heatmap, target, gt_homo) in test_progress_bar:
+            print(image)
             image = image.to(device)
             gt_heatmap = gt_heatmap.to(device).long()
-
+            print("--------------------------------------------------------------")
+            print(image.size())
             pred_heatmap = model(image)
 
             # (B, 92, 180, 320), (B, 180, 320)
@@ -447,16 +449,16 @@ def test():
             if True:
             # if False:
                 if pred_rgb.shape[0] >= 4 and pred_homo is not None:
-                    # plt.imsave(osp.join(iou_visual_dir, 'test_%05d_%05d_gt_iou_part.png' % (
-                    #     epoch, step)), gt_part_mask)
-                    # plt.imsave(osp.join(iou_visual_dir, 'test_%05d_%05d_pred_iou_part.png' % (
-                    #     epoch, step)), pred_part_mask)
-                    # plt.imsave(osp.join(iou_visual_dir, 'test_%05d_%05d_merge_iou_part.png' % (
-                    #     epoch, step)), part_merge_result)
-                    # plt.imsave(osp.join(iou_visual_dir, 'test_%05d_%05d_line_iou_whole.png' % (
-                    #     epoch, step)), whole_line_merge_result)
-                    # plt.imsave(osp.join(iou_visual_dir, 'test_%05d_%05d_fill_iou_whole.png' % (
-                    #     epoch, step)), whole_fill_merge_result)
+                    plt.imsave(osp.join(iou_visual_dir, 'test_%05d_%05d_gt_iou_part.png' % (
+                        epoch, step)), gt_part_mask)
+                    plt.imsave(osp.join(iou_visual_dir, 'test_%05d_%05d_pred_iou_part.png' % (
+                        epoch, step)), pred_part_mask)
+                    plt.imsave(osp.join(iou_visual_dir, 'test_%05d_%05d_merge_iou_part.png' % (
+                        epoch, step)), part_merge_result)
+#                    plt.imsave(osp.join(iou_visual_dir, 'test_%05d_%05d_line_iou_whole.png' % (
+#                        epoch, step)), whole_line_merge_result)
+#                    plt.imsave(osp.join(iou_visual_dir, 'test_%05d_%05d_fill_iou_whole.png' % (
+ #                       epoch, step)), whole_fill_merge_result)
                     np.save(osp.join(homo_visual_dir, 'test_%05d_%05d_gt_homography.npy' % (
                         epoch, step)), gt_homo)
                     np.save(osp.join(homo_visual_dir, 'test_%05d_%05d_pred_homography.npy' % (

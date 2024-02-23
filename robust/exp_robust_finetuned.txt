@@ -20,7 +20,7 @@
 --testset                   test                           
 --train_epochs              600                            
 --train_lr                  0.0001                         
---train_stage               1                              
+--train_stage               0
 --trainset                  train                      
 --use_non_local             1                              
 --weight_decay              0.0                            

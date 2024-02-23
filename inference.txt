@@ -1,6 +1,6 @@
 --batch_size                4                              
 --checkpoints_dir           checkpoint
---ckpt_path                 checkpoint/kpsfr_finetuned.pth                               
+--ckpt_path                 checkpoint/robust.pth
 --custom_worldcup_root      dataset/WorldCup_2014_2018
 --sfp_finetuned             True   
 --gpu_ids                   0                              
@@ -24,5 +24,5 @@
 --trainset                  train                      
 --use_non_local             1                              
 --weight_decay              0.0                           
---target_video              right/2018_Match_Highlights5_clip_00016-1 left/2014_Match_Highlights1_clip_00007-1
+--target_video              2sec.mp4
 --target_image              128 113

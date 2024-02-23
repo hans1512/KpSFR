@@ -36,7 +36,7 @@ class StaticTransformDataset(data.Dataset):
             frame_list, key=lambda x: int(x[:-4]))]
 
         homographies_list = [osp.basename(name) for name in glob.glob(
-            osp.join(self.root, self.data_type, '*.homographyMatrix'))]
+            osp.join(self.root, self.data_type, '*.npy'))]
         self.homographies = [mat for mat in sorted(
             homographies_list, key=lambda x: int(x[:-17]))]
 
@@ -55,7 +55,7 @@ class StaticTransformDataset(data.Dataset):
         image = np.array(Image.open(
             osp.join(self.root, self.data_type, self.frames[index])))
 
-        gt_h = np.loadtxt(
+        gt_h = np.load(
             osp.join(self.root, self.data_type, self.homographies[index]))
 
         template_grid = utils.gen_template_grid()  # template grid shape (91, 3)

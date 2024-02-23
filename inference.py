@@ -10,7 +10,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from torch.utils.tensorboard import SummaryWriter
 
 import numpy as np
 import os
@@ -25,7 +24,6 @@ import matplotlib.pyplot as plt
 import utils
 import metrics
 import skimage.segmentation as ss
-
 
 # Get input arguments
 opt = CustomOptions(train=False)
@@ -50,7 +48,6 @@ def my_mseloss(gt, pred):
 
 
 def postprocessing(scores, pred, target, num_classes, nms_thres):
-
     # TODO: decode the heatmaps into keypoint sets using non-maximum suppression
     pred_cls_dict = {k: [] for k in range(1, num_classes)}
     for cls in range(1, num_classes):
@@ -95,7 +92,6 @@ def postprocessing(scores, pred, target, num_classes, nms_thres):
 
 
 def calc_keypts_metrics(gt_cls_dict, pred_cls_dict, pr_thres):
-
     num_gt_pos = 0
     num_pred_pos = 0
     num_both_keypts_appear = 0
@@ -123,7 +119,6 @@ def calc_keypts_metrics(gt_cls_dict, pred_cls_dict, pr_thres):
 
 
 def class_mapping(rgb):
-
     # TODO: class mapping
     template = utils.gen_template_grid()  # grid shape (91, 3), (x, y, label)
     src_pts = rgb.copy()
@@ -138,7 +133,6 @@ def class_mapping(rgb):
 
 
 def test():
-
     num_classes = 92
     # num_objects = opt.num_objects
     num_objects = 91
@@ -229,13 +223,16 @@ def test():
         enumerate(test_loader), total=len(test_loader), leave=False)
     test_progress_bar.set_description(
         f'Epoch: {epoch}/{total_epoch}')
+    print(opt.target_video)
+    cap = cv2.VideoCapture('2sec.mp4')
 
     total_process_time = 0
     total_frames = 0
 
     with torch.no_grad():
         for step, data in test_progress_bar:
-            image = data['rgb'].to(device)  # b*t*c*h*w
+            _, frame = cap.read()
+            image = frame.to(device)  # b*t*c*h*w
             target_dilated_hm = data['target_dilated_hm'][0].to(
                 device)  # k*t*1*h*w
             cls_gt = data['cls_gt'][0]  # t*h*w
@@ -253,6 +250,8 @@ def test():
             processor = InferenceCore(eval_model, image, device, k, lookup)
             # selector does not use
             processor.interact(0, image.shape[1], selector)
+
+            print(image)
 
             size = target_dilated_hm.shape[-2:]
             out_masks = torch.zeros((processor.t, 1, *size), device=device)
@@ -377,9 +376,9 @@ def test():
 
                 os.makedirs(vid_path_m, exist_ok=True)
                 cv2.imwrite(osp.join(vid_path_m, '%05d.png' %
-                            ti), np.uint8(pred_keypoints))
+                                     ti), np.uint8(pred_keypoints))
                 cv2.imwrite(osp.join(vid_path_m, '%05d_gt.png' %
-                            ti), np.uint8(cls_gt[ti]))
+                                     ti), np.uint8(cls_gt[ti]))
 
                 # TODO: save heatmap for visual result
                 if False:
@@ -437,10 +436,10 @@ def test():
             del lookup
             del processor
 
-        avg_batch_l2loss /= len(avg_precision_list)
+        # avg_batch_l2loss /= len(avg_precision_list)
 
         # TODO: log loss
-        print(f'Testing MSE Loss: {avg_batch_l2loss:.4f}')
+        # print(f'Testing MSE Loss: {avg_batch_l2loss:.4f}')
         # writer.add_scalar('Loss/MSE', avg_batch_l2loss, epoch)
 
         average_precision = np.array(avg_precision_list).mean()
@@ -502,8 +501,8 @@ def test():
             out_file.write(
                 f'Loading weights: {load_weights_path}')
             out_file.write('\n')
-            out_file.write(
-                f'Path of single frame prediction: {sfp_path}')
+            # out_file.write(
+            #    f'Path of single frame prediction: {sfp_path}')
             out_file.write('\n')
             out_file.write(f'Model architecture: {model_archi}')
             out_file.write('\n')
@@ -525,18 +524,18 @@ def test():
 
         print('Total processing time: ', total_process_time)
         print('Total processed frames: ', total_frames)
-        print(f'FPS: {(total_frames / total_process_time):.3f}')
+
+
+#        print(f'FPS: {(total_frames / total_process_time):.3f}')
 
 
 def main():
-
     test()
     # writer.flush()
     # writer.close()
 
 
 if __name__ == '__main__':
-
     start_time = time.time()
     main()
     print(f'Done...Take {(time.time() - start_time):.4f} (sec)')

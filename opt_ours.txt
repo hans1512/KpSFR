@@ -1,7 +1,7 @@
---batch_size                4                              
+--batch_size                1
 --checkpoints_dir           checkpoint                     
---ckpt_path                                                 
---custom_worldcup_root      dataset/WorldCup_2014_2018   
+--ckpt_path                 checkpoint/kpsfr.pth
+--custom_worldcup_root      dataset/RBKData
 --sfp_finetuned             False   
 --gpu_ids                   0                              
 --isTrain                   True                           	
@@ -13,14 +13,14 @@
 --noise_trans               5.0                            
 --num_objects               4                              
 --pr_thres                  5.0                            
---public_worldcup_root      dataset/soccer_worldcup_2014/soccer_data 
+--public_worldcup_root      dataset/RBKData
 --resume                    False                          
 --step_size                 300                            
 --template_path             assets                       
 --testset                   test                           
 --train_epochs              1500                            
 --train_lr                  0.0001                         
---train_stage               0                              
+--train_stage               0
 --trainset                  train_val                      
 --use_non_local             1                           
 --weight_decay              0.0                            
