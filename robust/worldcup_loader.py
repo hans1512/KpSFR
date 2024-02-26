@@ -31,9 +31,9 @@ class PublicWorldCupDataset(data.Dataset):
             frame_list, key=lambda x: int(x[:-4]))]
 
         homographies_list = [osp.basename(name) for name in glob.glob(
-            osp.join(self.root, self.data_type, '*.homographyMatrix'))]
+            osp.join(self.root, self.data_type, '*.npy'))]
         self.homographies = [mat for mat in sorted(
-            homographies_list, key=lambda x: int(x[:-17]))]
+            homographies_list, key=lambda x: int(x[:-15]))]
 
         self.preprocess = transforms.Compose([
             transforms.ToTensor(),

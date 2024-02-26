@@ -37,8 +37,9 @@ class StaticTransformDataset(data.Dataset):
 
         homographies_list = [osp.basename(name) for name in glob.glob(
             osp.join(self.root, self.data_type, '*.npy'))]
+        print(homographies_list)
         self.homographies = [mat for mat in sorted(
-            homographies_list, key=lambda x: int(x[:-17]))]
+            homographies_list, key=lambda x: int(x[:-15]))]
 
         self.preprocess = transforms.Compose([
             transforms.ToTensor(),
