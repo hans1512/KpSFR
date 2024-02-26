@@ -1,6 +1,6 @@
 --batch_size                4                              
 --checkpoints_dir           ../checkpoint                     
---ckpt_path                                                
+--ckpt_path                 ../checkpoint/robust.pth
 --custom_worldcup_root      ../dataset/WorldCup_2014_2018   
 --sfp_finetuned             False 
 --gpu_ids                   0                              
